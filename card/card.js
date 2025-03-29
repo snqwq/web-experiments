@@ -12,13 +12,19 @@ cardHolders.forEach((cardHolder) => {
     cardHolder.addEventListener("mousemove", (e) =>
       handleMouseMove(e, cardHolder, card)
     );
+    card.style.boxShadow = "0 0 20px 5px rgba(255, 255, 255, 0.5)";
+    const cardContent = card.querySelector(".card-content");
+    cardContent.style.transform = "translate(-50%, -50%) translateZ(100px)"; // Pop out
   });
 
   cardHolder.addEventListener("mouseleave", () => {
     cardHolder.removeEventListener("mousemove", (e) =>
       handleMouseMove(e, cardHolder, card)
     );
+    card.style.boxShadow = "0 0";
     card.style.transform = "rotateX(0deg) rotateY(0deg)";
+    const cardContent = card.querySelector(".card-content");
+    cardContent.style.transform = "translate(-50%, -50%) translateZ(50px)"; // Reset
   });
 });
 
@@ -37,5 +43,14 @@ function rotateElement(event, container, element) {
   const offsetX = ((x - middleX) / middleX) * angleLimitX;
   const offsetY = ((y - middleY) / middleY) * angleLimitY;
 
+  // Rotate the card
   element.style.transform = `rotateX(${-offsetY}deg) rotateY(${offsetX}deg)`;
+
+  // Add parallax effect to .card-content
+  const cardContent = element.querySelector(".card-content");
+  const parallaxDepth = 5; // Adjust this value for stronger parallax
+  const parallaxX = ((x - middleX) / middleX) * parallaxDepth;
+  const parallaxY = ((y - middleY) / middleY) * parallaxDepth;
+
+  cardContent.style.transform = `translate(-50%, -50%) translateZ(100px) translateX(${parallaxX}px) translateY(${parallaxY}px)`;
 }
